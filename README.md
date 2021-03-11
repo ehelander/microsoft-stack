@@ -3,4 +3,4 @@
 ## C\#
 
 - Pluralsight
-  - [C# Fundamentals](c#/pluralsight/c#-fundamentals/README.md)
+  - [C# Fundamentals](c#/pluralsight/c#-fundamentals/)
