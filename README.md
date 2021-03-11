@@ -1,6 +1,6 @@
 # microsoft-stack
 
-## C#
+## C\#
 
 - Pluralsight
   - [C# Fundamentals](c#/pluralsight/c#-fundamentals/README.md)
