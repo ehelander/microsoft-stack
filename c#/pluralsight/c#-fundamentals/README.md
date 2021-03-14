@@ -262,21 +262,84 @@ namespace GradeBook
 
 ## Learning the C# Syntax
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=0fc3d387-1e0d-4b88-a382-22efd53e7e6b)
 
-### Reviewing Your Assignment
+### [Reviewing Your Assignment](https://app.pluralsight.com/course-player?clipId=f2a753fd-4a09-4c4c-a413-dcce3600ef58)
 
-### Working with Code Blocks and Statements
+### [Working with Code Blocks and Statements](https://app.pluralsight.com/course-player?clipId=bf07edc2-f7d6-4812-8311-f648c97aaa02)
+
+- Implicit typing (with initialization) &rarr; `var`
+- Look up VS Code C# snippets.
 
 ### Adding Numbers and Creating Arrays
 
-### Looping through Arrays
+### [Looping through Arrays](https://app.pluralsight.com/course-player?clipId=3f7b7f5e-8a98-418c-8733-45ebdfcf094c)
 
-### Using a List
+- Array initialization syntax:
+  - `var numbers = new double[3] { 12.7, 10.3, 6.11 };`
+  - `var numbers = new[] { 12.7, 10.3, 6.11 };`
+- `foreach`:
 
-### Computing and Formatting the Result
+  ```cs
+  var numbers = new[] { 12.7, 10.3, 6.11 };
 
-### Summary
+  var result = 0.0;
+  foreach (double number in numbers)
+  {
+    result += number;
+  }
+  ```
+
+### [Using a List](https://app.pluralsight.com/course-player?clipId=3b8df66f-fd24-45c5-86b3-208b16106710)
+
+- Access VS Code suggested fixed: Cmd + . (or Windows: Control + .).
+- Arrays are fixed-length.
+  - Data structures (list, stack, queue):
+    - `Systems.Collections.Generic`
+- List initialization:
+  - `List<double> grades = new List<double>();`
+  - `var grades = new List<double>() { 12.7, 10.3, 6.11, 4.1 };`
+
+### [Computing and Formatting the Result](https://app.pluralsight.com/course-player?clipId=c5be9427-7586-4cc9-8f83-dc4aa4206352)
+
+- Format as number with 1 digit after decimal:
+  - `Console.WriteLine($"The average grade is {result:N1}");`
+
+### [Summary](https://app.pluralsight.com/course-player?clipId=a45d2ba2-b1f4-4d7e-b249-85bb19ca9748)
+
+```cs
+using System;
+using System.Collections.Generic;
+
+namespace GradeBook
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      var grades = new List<double>() { 12.7, 10.3, 6.11, 4.1 };
+      grades.Add(56.1);
+
+      var result = 0.0;
+      foreach (double number in grades)
+      {
+        result += number;
+      }
+      result /= grades.Count;
+      Console.WriteLine($"The average grade is {result:N1}");
+
+      if (args.Length > 0)
+      {
+        Console.WriteLine($"Hello, {args[0]}!");
+      }
+      else
+      {
+        Console.WriteLine("Hello!");
+      }
+    }
+  }
+}
+```
 
 ## Working with Classes and Objects
 
