@@ -3,4 +3,4 @@
 ## C\#
 
 - Pluralsight
-  - [C# Fundamentals](c#/pluralsight/c#-fundamentals/)
+  - [C# Fundamentals](csharp/pluralsight/csharp-fundamentals/)
