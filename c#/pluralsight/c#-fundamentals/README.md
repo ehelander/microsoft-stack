@@ -1,5 +1,114 @@
 # [C# Fundamentals, Scott Allen, 2019-04-19](https://app.pluralsight.com/library/courses/csharp-fundamentals-dev/table-of-contents)
 
+- [C# Fundamentals, Scott Allen, 2019-04-19](#c-fundamentals-scott-allen-2019-04-19)
+  - [Course Overview](#course-overview)
+    - [Course Overview](#course-overview-1)
+  - [Introducing C# and .NET](#introducing-c-and-net)
+    - [Introduction](#introduction)
+    - [Downloading .NET for Windows, macOS, and Linux](#downloading-net-for-windows-macos-and-linux)
+    - [Understanding .NET and .NET Core](#understanding-net-and-net-core)
+    - [Understanding the .NET Runtime and Framework](#understanding-the-net-runtime-and-framework)
+    - [Using the .NET Command Line Interface](#using-the-net-command-line-interface)
+    - [Creating the First C# Project](#creating-the-first-c-project)
+    - [Editing C# Code with Visual Studio Code](#editing-c-code-with-visual-studio-code)
+    - [Running and Building Your Project](#running-and-building-your-project)
+    - [Saying Hello with C#](#saying-hello-with-c)
+    - [Debugging a C# Application](#debugging-a-c-application)
+    - [Summary](#summary)
+  - [Learning the C# Syntax](#learning-the-c-syntax)
+    - [Introduction](#introduction-1)
+    - [Reviewing Your Assignment](#reviewing-your-assignment)
+    - [Working with Code Blocks and Statements](#working-with-code-blocks-and-statements)
+    - [Adding Numbers and Creating Arrays](#adding-numbers-and-creating-arrays)
+    - [Looping through Arrays](#looping-through-arrays)
+    - [Using a List](#using-a-list)
+    - [Computing and Formatting the Result](#computing-and-formatting-the-result)
+    - [Summary](#summary-1)
+  - [Working with Classes and Objects](#working-with-classes-and-objects)
+    - [Introduction](#introduction-2)
+    - [Creating a Class](#creating-a-class)
+    - [Adding State and Behavior](#adding-state-and-behavior)
+    - [Defining a Method](#defining-a-method)
+    - [Defining a Field](#defining-a-field)
+    - [Adding a Constructor](#adding-a-constructor)
+    - [Requiring Constructor Parameters](#requiring-constructor-parameters)
+    - [Working with Static Members](#working-with-static-members)
+    - [Computing Statistics](#computing-statistics)
+    - [Solving the Statistics Challenge](#solving-the-statistics-challenge)
+    - [Summary](#summary-2)
+  - [Testing Your Code](#testing-your-code)
+    - [Introduction](#introduction-3)
+    - [The Many Benefits of Unit Testing](#the-many-benefits-of-unit-testing)
+    - [Creating a Unit Test Project](#creating-a-unit-test-project)
+    - [Writing and Running a Test](#writing-and-running-a-test)
+    - [Referencing Projects and Packages](#referencing-projects-and-packages)
+    - [Refactoring for Testability](#refactoring-for-testability)
+    - [Summary](#summary-3)
+  - [Working with Reference Types and Value Types](#working-with-reference-types-and-value-types)
+    - [Introduction](#introduction-4)
+    - [Reference Types and Value Types](#reference-types-and-value-types)
+    - [Creating a Solution File](#creating-a-solution-file)
+    - [Testing Object References](#testing-object-references)
+    - [Referencing Different Objects](#referencing-different-objects)
+    - [Passing Parameters by Value](#passing-parameters-by-value)
+    - [Returning Object References](#returning-object-references)
+    - [Passing Parameters by Reference](#passing-parameters-by-reference)
+    - [Working with Value Types](#working-with-value-types)
+    - [Value Type Parameters](#value-type-parameters)
+    - [Looking for Reference Types and Value Types](#looking-for-reference-types-and-value-types)
+    - [The Special Case of Strings in .NET](#the-special-case-of-strings-in-net)
+    - [Taking Advantage of Garbage Collection](#taking-advantage-of-garbage-collection)
+    - [Summary](#summary-4)
+  - [Controlling the Flow of Execution](#controlling-the-flow-of-execution)
+    - [Introduction](#introduction-5)
+    - [Branching with if Statements](#branching-with-if-statements)
+    - [Looping with for, foreach, do, and while](#looping-with-for-foreach-do-and-while)
+    - [Jumping with break and continue](#jumping-with-break-and-continue)
+    - [Switching with the switch Statement](#switching-with-the-switch-statement)
+    - [Pattern Matching with switch](#pattern-matching-with-switch)
+    - [Challenge: Taking User Input from the Console](#challenge-taking-user-input-from-the-console)
+    - [One Solution](#one-solution)
+    - [Throwing Exceptions](#throwing-exceptions)
+    - [Catching Exceptions](#catching-exceptions)
+    - [Summary](#summary-5)
+  - [Building Types](#building-types)
+    - [Introduction](#introduction-6)
+    - [Overloading Methods](#overloading-methods)
+    - [Defining Properties](#defining-properties)
+    - [Defining Property Getters and Setters](#defining-property-getters-and-setters)
+    - [Defining readonly Members](#defining-readonly-members)
+    - [Defining const Members](#defining-const-members)
+    - [Introducing Events and Delegates](#introducing-events-and-delegates)
+    - [Defining a Delegate](#defining-a-delegate)
+    - [Using Multi-cast Delegates](#using-multi-cast-delegates)
+    - [Defining an Event](#defining-an-event)
+    - [Subscribing to an Event](#subscribing-to-an-event)
+    - [Summary](#summary-6)
+  - [Object-oriented Programming with C](#object-oriented-programming-with-c)
+    - [Introduction](#introduction-7)
+    - [The Pillars of OOP](#the-pillars-of-oop)
+    - [Deriving from a Base Class](#deriving-from-a-base-class)
+    - [Chaining Constructors](#chaining-constructors)
+    - [Deriving from System.Object](#deriving-from-systemobject)
+    - [Setting up a Scenario](#setting-up-a-scenario)
+    - [Defining an Abstract Class](#defining-an-abstract-class)
+    - [Defining an Interface](#defining-an-interface)
+    - [Writing Grades to a File](#writing-grades-to-a-file)
+    - [Using IDisposable](#using-idisposable)
+    - [A Statistical Challenge](#a-statistical-challenge)
+    - [Refactoring Statistics](#refactoring-statistics)
+    - [Summary](#summary-7)
+  - [Catching up with the Latest in C](#catching-up-with-the-latest-in-c)
+    - [Introduction](#introduction-8)
+    - [Working with Non-nullable Reference Types](#working-with-non-nullable-reference-types)
+    - [Summary](#summary-8)
+    - [Going Further with C](#going-further-with-c)
+    - [Introduction](#introduction-9)
+    - [Generics](#generics)
+    - [Async C](#async-c)
+    - [LINQ](#linq)
+    - [Effective C](#effective-c)
+
 ## Course Overview
 
 ### [Course Overview](https://app.pluralsight.com/course-player?courseId=0096b00d-2398-435a-82f7-3f5401408ab1)
@@ -343,27 +452,198 @@ namespace GradeBook
 
 ## Working with Classes and Objects
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=1acccfd3-3a64-4719-9bbb-8dc3a43b1c64)
 
-### Creating a Class
+### [Creating a Class](https://app.pluralsight.com/course-player?clipId=893b69a0-e3a1-4807-a1fb-0d966614fcd1)
 
-### Adding State and Behavior
+- Code should almost always be inside a defined `namespace`; otherwise, we're in the global namespace.
 
-### Defining a Method
+  ```cs
+  namespace GradeBook
+  {
+    class Program
+    {
+      // ...
+    }
+  }
+  ```
 
-### Defining a Field
+- Microsoft libraries are often in the `System` namespace.
+- Allen prefers to never see namespaces in the code.
 
-### Adding a Constructor
+### [Adding State and Behavior](https://app.pluralsight.com/course-player?clipId=219579ef-110d-476a-ba4e-ef31d97a1b8f)
 
-### Requiring Constructor Parameters
+- Convention: 1 class per file
+  - Class: state + behavior
+- Add `src/GradeBook/Book.cs`:
 
-### Working with Static Members
+  ```cs
+  namespace GradeBook {
+      class Book {
 
-### Computing Statistics
+    }
+  }
+  ```
 
-### Solving the Statistics Challenge
+### [Defining a Method](https://app.pluralsight.com/course-player?clipId=a0d44461-bcb4-4c65-be0c-ba202e7abe4d)
 
-### Summary
+- `src/GradeBook/Program.cs`:
+
+  ```cs
+  using System;
+  using System.Collections.Generic;
+
+  namespace GradeBook
+  {
+    class Program
+    {
+      static void Main(string[] args)
+      {
+        var book = new Book();
+        book.AddGrade(89.1);
+
+        var grades = new List<double>() { 12.7, 10.3, 6.11, 4.1 };
+        grades.Add(56.1);
+
+        var result = 0.0;
+        foreach (double number in grades)
+        {
+          result += number;
+        }
+        result /= grades.Count;
+        Console.WriteLine($"The average grade is {result:N1}");
+      }
+    }
+  }
+  ```
+
+- `src/GradeBook/Book.cs`
+
+  ```cs
+  namespace GradeBook
+  {
+    class Book
+    {
+      public void AddGrade(double grade)
+      {
+
+      }
+    }
+  }
+  ```
+
+### [Defining a Field](https://app.pluralsight.com/course-player?clipId=4e7eb476-1b9f-4f81-8eee-f81365bc0c13)
+
+- Note that a field cannot use implicit typing.
+
+### [Adding a Constructor](https://app.pluralsight.com/course-player?clipId=a96054ab-76de-4a61-869f-89d38afcc278)
+
+- We'll define an explicit constructor (vs. an implicit constructor provided by the complier).
+
+```cs
+
+using System.Collections.Generic;
+
+namespace GradeBook
+{
+  class Book
+  {
+    public Book()
+    {
+      grades = new List<double>();
+    }
+
+    public void AddGrade(double grade)
+    {
+      grades.Add(grade);
+    }
+
+    List<double> grades;
+  }
+}
+```
+
+### [Requiring Constructor Parameters](https://app.pluralsight.com/course-player?clipId=a6b14802-c5e7-4952-a99b-a6c1e3f642f7)
+
+- Access modifiers
+  - `public`
+  - `private`
+- `this` is an implicit variable always available inside constructors and methods.
+
+### [Working with Static Members](https://app.pluralsight.com/course-player?clipId=6ceaa039-c943-4408-b637-a7b9b8c7c792)
+
+- Opposite of a static method: An instance member.
+- Statics are not associate with an object instance; they're associated with the type they're defined inside of.
+
+### [Computing Statistics](https://app.pluralsight.com/course-player?clipId=619ab8b5-efb5-4540-a025-18b431dd5b0d)
+
+### [Solving the Statistics Challenge](https://app.pluralsight.com/course-player?clipId=15d69e29-75ff-4639-b1c8-24f6f4a9e3fe)
+
+### [Summary](https://app.pluralsight.com/course-player?clipId=8ac5b526-98e5-4e00-b4d7-bce718d504a8)
+
+- `Program.cs`:
+
+  ```cs
+  namespace GradeBook
+  {
+    class Program
+    {
+      static void Main(string[] args)
+      {
+
+        var book = new Book("Scott's Grade Book");
+        book.AddGrade(89.1);
+        book.AddGrade(90.5);
+        book.AddGrade(77.5);
+        book.ShowStatistics();
+      }
+    }
+  }
+  ```
+
+- `Book.cs`:
+
+  ```cs
+  using System;
+  using System.Collections.Generic;
+
+  namespace GradeBook
+  {
+    class Book
+    {
+      public Book(string name)
+      {
+        grades = new List<double>();
+        this.name = name;
+      }
+
+      public void AddGrade(double grade)
+      {
+        grades.Add(grade);
+      }
+
+      public void ShowStatistics()
+      {
+        var result = 0.0;
+        var lowestGrade = double.MaxValue;
+        var highestGrade = double.MinValue;
+        foreach (double number in grades)
+        {
+          lowestGrade = Math.Min(number, lowestGrade);
+          highestGrade = Math.Max(number, highestGrade);
+          result += number;
+        }
+        result /= grades.Count;
+        Console.WriteLine($"The highest grade is {highestGrade:N1}");
+        Console.WriteLine($"The lowest grade is {lowestGrade:N1}");
+        Console.WriteLine($"The average grade is {result:N1}");
+      }
+
+      private List<double> grades;
+      private string name;
+    }
+  }
+  ```
 
 ## Testing Your Code
 
