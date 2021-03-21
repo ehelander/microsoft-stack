@@ -647,19 +647,285 @@ namespace GradeBook
 
 ## Testing Your Code
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=54eb1aab-f19e-4828-b4cd-761873608479)
 
-### The Many Benefits of Unit Testing
+### [The Many Benefits of Unit Testing](https://app.pluralsight.com/course-player?clipId=6c9113dd-8203-4108-842f-3dc749b6282c)
 
-### Creating a Unit Test Project
+- We'll use xUnit.net
 
-### Writing and Running a Test
+### [Creating a Unit Test Project](https://app.pluralsight.com/course-player?clipId=0d26192f-9623-411c-b325-a0ea09e3f33c)
 
-### Referencing Projects and Packages
+- Convention: Write tests in a separate project.
 
-### Refactoring for Testability
+  ```sh
+  cd test
+  mkdir GradeBook.Tests
+  cd GradeBook.Tests
+  dotnet new xunit
+  ```
 
-### Summary
+  - xUnit is a NuGet package; not part of .NET Core.
+
+    - Using `dotnet new xunit` handled this already for us:
+
+      - https://www.nuget.org/packages/xunit/
+
+        ```sh
+        dotnet add package xunit --version 2.4.1
+        ```
+
+- `test/GradeBook.Tests/GradeBook.Tests.csproj`:
+
+  ```xml
+  <Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFramework>net5.0</TargetFramework>
+
+      <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+      <PackageReference Include="xunit" Version="2.4.1" />
+      <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="coverlet.collector" Version="1.3.0">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+
+  </Project>
+  ```
+
+### [Writing and Running a Test](https://app.pluralsight.com/course-player?clipId=13461d51-f9df-422d-95a9-98da47b1c741)
+
+- The new xUnit project created `test/GradeBook.Tests/UnitTest1.cs`:
+
+  ```cs
+  using System;
+  // Bring in Xunit namespace.
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+      public class UnitTest1
+      {
+          // `[Fact]` is an attribute. It's attached to the following symbol. xUnit looks for methods with the [Fact] attribute.
+          [Fact]
+          public void Test1()
+          {
+
+          }
+      }
+  }
+  ```
+
+- Install .NET Core unit text extension.
+- .NET CLI includes a test runner:
+
+  ```cs
+  dotnet test
+  ```
+
+- Unit test essence:
+
+  ```cs
+  using System;
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+    public class UnitTest1
+    {
+      [Fact]
+      public void Test1()
+      {
+        // arrange
+        var x = 5;
+        var y = 2;
+        var expected = 7;
+
+        // act
+        var actual = x + y;
+
+        // assert
+        Assert.Equal(expected, actual);
+      }
+    }
+  }
+  ```
+
+### [Referencing Projects and Packages](https://app.pluralsight.com/course-player?clipId=2dfff216-dc41-4d34-87e5-8e2d3d783b3a)
+
+- Convention: File name should match test (class) name.
+- CLI: Add a project-to-project reference (so we can pull Book into the test project).
+
+  ```sh
+  dotnet add reference ../../src/GradeBook/GradeBook.csproj
+  ```
+
+- Adds a project reference to `GradeBook.Tests.csproj`:
+
+  ```xml
+  <Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFramework>net5.0</TargetFramework>
+
+      <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+      <PackageReference Include="xunit" Version="2.4.1" />
+      <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="coverlet.collector" Version="1.3.0">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\GradeBook\GradeBook.csproj" />
+    </ItemGroup>
+
+  </Project>
+  ```
+
+- Default class access: `internal` (can only be used within the same project).
+  - Need to add `public` so test can access `Book`.
+- Because we are in a namespace underneath the `Book`'s namespace (i.e., `namespace GradeBook.Tests` is under `namespace GradeBook`), we don't need a `using` statement.
+
+### [Refactoring for Testability](https://app.pluralsight.com/course-player?clipId=114ffe93-dcd9-4b40-bede-7ef7e17ad580)
+
+- `ShowStatistics` currently computes grades and displays the result of the calculations.
+- Note that the .NET runtime sets all fields of a class to 'all bits off' - so, for a floating point field, to `0.0`.
+- Add `gradebook/src/GradeBook/Statistics.cs`:
+
+  ```cs
+  namespace GradeBook
+  {
+    public class Statistics
+    {
+      public double Average;
+      public double High;
+      public double Low;
+    }
+  }
+  ```
+
+- `gradebook/src/GradeBook/Book.cs`:
+
+  ```cs
+
+  using System;
+  using System.Collections.Generic;
+
+  namespace GradeBook
+  {
+    public class Book
+    {
+      public Book(string name)
+      {
+        grades = new List<double>();
+        this.name = name;
+      }
+
+      public void AddGrade(double grade)
+      {
+        grades.Add(grade);
+      }
+
+      public Statistics GetStatistics()
+      {
+        var result = new Statistics();
+        result.Average = 0.0;
+        result.High = double.MinValue;
+        result.Low = double.MaxValue;
+        foreach (double grade in grades)
+        {
+          result.Low = Math.Min(grade, result.Low);
+          result.High = Math.Max(grade, result.High);
+          result.Average += grade;
+        }
+        result.Average /= grades.Count;
+
+        return result;
+      }
+
+      private List<double> grades;
+      private string name;
+    }
+  }
+  ```
+
+- `gradebook/src/GradeBook/Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+    class Program
+    {
+      static void Main(string[] args)
+      {
+
+        var book = new Book("Scott's Grade Book");
+        book.AddGrade(89.1);
+        book.AddGrade(90.5);
+        book.AddGrade(77.5);
+        var stats = book.GetStatistics();
+
+        Console.WriteLine($"The highest grade is {stats.High:N1}");
+        Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+        Console.WriteLine($"The average grade is {stats.Average:N1}");
+      }
+    }
+  }
+  ```
+
+- `gradebook/test/GradeBook.Tests/BookTests.cs`:
+
+  ```cs
+  using System;
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+    public class BookTests
+    {
+      [Fact]
+      public void Test1()
+      {
+        // arrange
+        var book = new Book("");
+        book.AddGrade(89.1);
+        book.AddGrade(90.5);
+        book.AddGrade(77.3);
+
+        // act
+        var result = book.GetStatistics();
+
+        // assert
+        // Assert.Equal to 1 decimal point of precision.
+        Assert.Equal(85.6, result.Average, 1);
+        Assert.Equal(90.5, result.High, 1);
+        Assert.Equal(77.3, result.Low, 1);
+      }
+    }
+  }
+  ```
+
+- Test with `dotnet test` from within `gradebook/test/GradeBook.Tests`.
+
+### [Summary](https://app.pluralsight.com/course-player?clipId=f67b23bc-1c46-4ecf-9744-7f67bb8867fd)
 
 ## Working with Reference Types and Value Types
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "THaqBvC9C3wP+Lay4agUbeVET8kxLrwAbj+/vGPuC8PIFe1dWvJhhB+BDrGwGFUh6r1mS94i22+XFkGH+I/UVQ==",
+  "dgSpecHash": "Ic1fLh3bmb12wNOts6ODiAJoH1dlfgFc4FllV6LdweXDWEs/wFuAXYAUZ8AERLtSkSGK4zUZlgnoa8iEVSlChg==",
   "success": true,
-  "projectFilePath": "/Users/ehelander/repo/personal/microsoft-stack/c#/pluralsight/c#-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
+  "projectFilePath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

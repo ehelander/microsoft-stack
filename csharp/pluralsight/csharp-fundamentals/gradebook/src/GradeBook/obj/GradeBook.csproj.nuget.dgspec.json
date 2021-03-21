@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ehelander/repo/personal/microsoft-stack/c#/pluralsight/c#-fundamentals/gradebook/src/GradeBook/GradeBook.csproj": {}
+    "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj": {}
   },
   "projects": {
-    "/Users/ehelander/repo/personal/microsoft-stack/c#/pluralsight/c#-fundamentals/gradebook/src/GradeBook/GradeBook.csproj": {
+    "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ehelander/repo/personal/microsoft-stack/c#/pluralsight/c#-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
+        "projectUniqueName": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
         "projectName": "GradeBook",
-        "projectPath": "/Users/ehelander/repo/personal/microsoft-stack/c#/pluralsight/c#-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
+        "projectPath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
         "packagesPath": "/Users/ehelander/.nuget/packages/",
-        "outputPath": "/Users/ehelander/repo/personal/microsoft-stack/c#/pluralsight/c#-fundamentals/gradebook/src/GradeBook/obj/",
+        "outputPath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/ehelander/.nuget/NuGet/NuGet.Config"
