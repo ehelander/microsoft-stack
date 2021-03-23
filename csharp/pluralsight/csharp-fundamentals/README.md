@@ -929,23 +929,307 @@ namespace GradeBook
 
 ## Working with Reference Types and Value Types
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=da67bd8b-7dec-4347-ab62-da09aa2dc70f)
 
-### Reference Types and Value Types
+### [Reference Types and Value Types](https://app.pluralsight.com/course-player?clipId=7a6a9615-37d8-4c58-aacf-4b5bb26125ec)
 
-### Creating a Solution File
+- Reference type vs. value type
+  - Any use of a class: A reference type
+  - The variable stores a reference to the value.
+- For a value type: The variable stores the value, rather than a pointer to the value.
 
-### Testing Object References
+### [Creating a Solution File](https://app.pluralsight.com/course-player?clipId=a3b92bcd-7f18-41af-bc7a-49dbad97f120)
 
-### Referencing Different Objects
+- A solution file: A file that keeps track of multiple projects.
+  - Understood by Visual Studio and the CLI.
+- Create solution in `gradebok`:
 
-### Passing Parameters by Value
+```sh
+# Create solution file.
+dotnet new sln
+# Add projects to solution file.
+dotnet sln add src/GradeBook/GradeBook.csproj
+dotnet sln add test/GradeBook.Tests/GradeBook.Tests.csproj
+# Looks for solution file in current directory.
+dotnet build
+```
 
-### Returning Object References
+### [Testing Object References](https://app.pluralsight.com/course-player?clipId=e2efdb6f-c54b-4c08-b40d-78ae5a1601c6)
 
-### Passing Parameters by Reference
+- In `src/GradeBook/Book.cs`:
 
-### Working with Value Types
+  - Change name from `private` to `public` for ease of testing.
+    - Convention in C#: A public member always has an uppercase name.
+    - We also don't need `this` anymore, since the case differs.
+
+  ```cs
+
+  using System;
+  using System.Collections.Generic;
+
+  namespace GradeBook
+  {
+    public class Book
+    {
+      public Book(string name)
+      {
+        grades = new List<double>();
+        Name = name;
+      }
+
+      public void AddGrade(double grade)
+      {
+        grades.Add(grade);
+      }
+
+      public Statistics GetStatistics()
+      {
+        var result = new Statistics();
+        result.Average = 0.0;
+        result.High = double.MinValue;
+        result.Low = double.MaxValue;
+        foreach (double grade in grades)
+        {
+          result.Low = Math.Min(grade, result.Low);
+          result.High = Math.Max(grade, result.High);
+          result.Average += grade;
+        }
+        result.Average /= grades.Count;
+
+        return result;
+      }
+
+      private List<double> grades;
+      public string Name;
+    }
+  }
+  ```
+
+- In `test/GradeBook.Tests`:
+  - Rename `Test1` to `BookCalculatesAnAverageGrade`
+- Create `test/GradeBook.TypeTest.cs`:
+
+  ```cs
+  using System;
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+    public class TypeTests
+    {
+      [Fact]
+      public void GetBookReturnsDifferentObjects()
+      {
+        var book1 = GetBook("Book 1");
+        var book2 = GetBook("Book 2");
+
+        Assert.Equal("Book 1", book1.Name);
+        Assert.Equal("Book 2", book2.Name);
+      }
+
+      Book GetBook(string name)
+      {
+        return new Book(name);
+      }
+    }
+  }
+  ```
+
+### [Referencing Different Objects](https://app.pluralsight.com/course-player?clipId=7ee97500-84c5-4d8c-a68d-11746614a144)
+
+```sh
+dotnet test
+```
+
+- `test/GradeBook.Tests/TypeTests.cs`:
+
+  ```cs
+  using System;
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+    public class TypeTests
+    {
+      [Fact]
+      public void GetBookReturnsDifferentObjects()
+      {
+        var book1 = GetBook("Book 1");
+        var book2 = GetBook("Book 2");
+
+        Assert.Equal("Book 1", book1.Name);
+        Assert.Equal("Book 2", book2.Name);
+        Assert.NotSame(book1, book2);
+      }
+
+      [Fact]
+      public void TwoVarsCanReferenceSameObject()
+      {
+        var book1 = GetBook("Book 1");
+        var book2 = book1;
+
+        // Under the hood: Assert.True(Object.ReferenceEquals(book1, book2));
+        Assert.Same(book1, book2);
+      }
+
+      Book GetBook(string name)
+      {
+        return new Book(name);
+      }
+    }
+  }
+  ```
+
+### [Passing Parameters by Value](https://app.pluralsight.com/course-player?clipId=c982cb1e-eecf-4153-b58c-8b42a4b56f53)
+
+- Note that `var book2 = book1` does _not_ make a copy. It takes the value (the reference, the pointer) inside `book1` and copies that to `book2`, leading us to the same memory location.
+- `test/GradeBook.Tests/TypeTests.cs`:
+
+  ```cs
+  using System;
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+    public class TypeTests
+    {
+      [Fact]
+      public void CanSetNameFromReference()
+      {
+        var book1 = GetBook("Book 1");
+        SetName(book1, "New Name");
+
+        Assert.Equal("New Name", book1.Name);
+      }
+
+      private void SetName(Book book, string name)
+      {
+        book.Name = name;
+      }
+
+      [Fact]
+      public void GetBookReturnsDifferentObjects()
+      {
+        var book1 = GetBook("Book 1");
+        var book2 = GetBook("Book 2");
+
+        Assert.Equal("Book 1", book1.Name);
+        Assert.Equal("Book 2", book2.Name);
+        Assert.NotSame(book1, book2);
+      }
+
+      [Fact]
+      public void TwoVarsCanReferenceSameObject()
+      {
+        var book1 = GetBook("Book 1");
+        var book2 = book1;
+
+        // Under the hood: Assert.True(Object.ReferenceEquals(book1, book2));
+        Assert.Same(book1, book2);
+      }
+
+      Book GetBook(string name)
+      {
+        return new Book(name);
+      }
+    }
+  }
+  ```
+
+### [Returning Object References](https://app.pluralsight.com/course-player?clipId=654696f3-26b9-4011-aa67-24d2b868b39f)
+
+- Passing a parameter: In C#, you are always passing by _value_.
+  - ![](2021-03-22-21-07-01.png)
+
+### [Passing Parameters by Reference](https://app.pluralsight.com/course-player?clipId=d8476418-6861-4720-b0b9-f818632e2189)
+
+- ![](2021-03-22-21-12-42.png)
+- ![](2021-03-22-21-15-46.png)
+- Difference between `ref` and `out`: With `out`, the C# compiler assumes the incoming reference has not been an initialized.
+- `test/GradeBook.Tests/TypeTests.cs`:
+
+  ```cs
+  using System;
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+    public class TypeTests
+    {
+      [Fact]
+      public void CSharpCanPassByRef()
+      {
+        var book1 = GetBook("Book 1");
+        // GetBookSetName(ref book1, "New Name");
+        GetBookSetName(out book1, "New Name");
+
+        Assert.Equal("New Name", book1.Name);
+      }
+
+      // private void GetBookSetName(ref Book book, string name)
+      private void GetBookSetName(out Book book, string name)
+      {
+        book = new Book(name);
+      }
+
+      [Fact]
+      public void CSharpIsPassByValue()
+      {
+        var book1 = GetBook("Book 1");
+        GetBookSetName(book1, "New Name");
+
+        Assert.Equal("Book 1", book1.Name);
+      }
+
+      private void GetBookSetName(Book book, string name)
+      {
+        book = new Book(name);
+        book.Name = name;
+      }
+      [Fact]
+      public void CanSetNameFromReference()
+      {
+        var book1 = GetBook("Book 1");
+        SetName(book1, "New Name");
+
+        Assert.Equal("New Name", book1.Name);
+      }
+
+      private void SetName(Book book, string name)
+      {
+        book.Name = name;
+      }
+
+      [Fact]
+      public void GetBookReturnsDifferentObjects()
+      {
+        var book1 = GetBook("Book 1");
+        var book2 = GetBook("Book 2");
+
+        Assert.Equal("Book 1", book1.Name);
+        Assert.Equal("Book 2", book2.Name);
+        Assert.NotSame(book1, book2);
+      }
+
+      [Fact]
+      public void TwoVarsCanReferenceSameObject()
+      {
+        var book1 = GetBook("Book 1");
+        var book2 = book1;
+
+        // Under the hood: Assert.True(Object.ReferenceEquals(book1, book2));
+        Assert.Same(book1, book2);
+      }
+
+      Book GetBook(string name)
+      {
+        return new Book(name);
+      }
+    }
+  }
+  ```
+
+### [Working with Value Types](https://app.pluralsight.com/course-player?clipId=9c87cba7-afa8-41d5-a02a-7250f81c79ea)
 
 ### Value Type Parameters
 
