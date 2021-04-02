@@ -1523,15 +1523,126 @@ for (int index = 0; index < grades.Count; index += 1)
 
 ### [Challenge: Taking User Input from the Console](https://app.pluralsight.com/course-player?clipId=2c1a1640-aad1-432a-b175-5531772bafaf)
 
--
+### [One Solution](https://app.pluralsight.com/course-player?clipId=ad8821e5-b4d5-4070-9b18-5af1de1663c2)
 
-### One Solution
+- In `gradebook/src/GradeBook/Program.cs`:
 
-### Throwing Exceptions
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+    class Program
+    {
+      static void Main(string[] args)
+      {
 
-### Catching Exceptions
+        var book = new Book("Scott's Grade Book");
 
-### Summary
+        while (true)
+        {
+          Console.WriteLine("Enter a grade or 'q' to quit");
+          var input = Console.ReadLine();
+
+          if (input == "q")
+          {
+            break;
+          }
+
+          var grade = double.Parse(input);
+          book.AddGrade(grade);
+        }
+
+        var stats = book.GetStatistics();
+
+        Console.WriteLine($"The highest grade is {stats.High:N1}");
+        Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+        Console.WriteLine($"The average grade is {stats.Average:N1}");
+        Console.WriteLine($"The letter is {stats.Letter}");
+      }
+    }
+  }
+  ```
+
+- Run:
+
+```sh
+dotnet run --project src/GradeBook/GradeBook.csproj
+```
+
+### [Throwing Exceptions](https://app.pluralsight.com/course-player?clipId=d8377fb8-bba3-49f2-9f85-b2ddd237791d)
+
+- In `gradebook/src/GradeBook/Book.cs`:
+
+  ```cs
+  public void AddGrade(double grade)
+  {
+    if (grade >= 0 && grade <= 100)
+    {
+      grades.Add(grade);
+    }
+    else
+    {
+      throw new ArgumentException($"Invalid {nameof(grade)}");
+    }
+  }
+  ```
+
+### [Catching Exceptions](https://app.pluralsight.com/course-player?clipId=482048a9-05ef-493f-a052-5cfaf3c466ab)
+
+- In `gradebook/src/GradeBook/Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+    class Program
+    {
+      static void Main(string[] args)
+      {
+
+        var book = new Book("Scott's Grade Book");
+
+        while (true)
+        {
+          Console.WriteLine("Enter a grade or 'q' to quit");
+          var input = Console.ReadLine();
+
+          if (input == "q")
+          {
+            break;
+          }
+
+          try
+          {
+            var grade = double.Parse(input);
+            book.AddGrade(grade);
+          }
+          catch (ArgumentException ex)
+          {
+            Console.WriteLine(ex.Message);
+          }
+          catch (FormatException ex)
+          {
+            Console.WriteLine(ex.Message);
+          }
+          finally
+          {
+            Console.WriteLine("**");
+          }
+        }
+
+        var stats = book.GetStatistics();
+
+        Console.WriteLine($"The highest grade is {stats.High:N1}");
+        Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+        Console.WriteLine($"The average grade is {stats.Average:N1}");
+        Console.WriteLine($"The letter is {stats.Letter}");
+      }
+    }
+  }
+  ```
+
+### [Summary](https://app.pluralsight.com/course-player?clipId=4520b2c1-2b67-499a-8243-ffa14a8e2642)
 
 ## Building Types
 
