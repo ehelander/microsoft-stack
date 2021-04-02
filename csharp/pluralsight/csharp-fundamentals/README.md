@@ -1231,31 +1231,299 @@ dotnet test
 
 ### [Working with Value Types](https://app.pluralsight.com/course-player?clipId=9c87cba7-afa8-41d5-a02a-7250f81c79ea)
 
-### Value Type Parameters
+- Add an additional test in `test/GradeBook.Tests/TypeTests.cs`:
 
-### Looking for Reference Types and Value Types
+  ```cs
+  [Fact]
+  public void Test1()
+  {
+    var x = GetInt();
 
-### The Special Case of Strings in .NET
+    Assert.Equal(3, x);
+  }
 
-### Taking Advantage of Garbage Collection
+  public int GetInt()
+  {
+    return 3;
+  }
+  ```
 
-### Summary
+- Value types: integers, floating point numbers, datetimes, and booleans
+  - What you see is what you get,
+  - The variable holds the value (vs. a reference to the object, which is somewhere else in memory).
+- Add an additional test in `test/GradeBook.Tests/TypeTests.cs`:
+
+  ```cs
+  [Fact]
+  public void Test1()
+  {
+    var x = GetInt();
+    Assert.Equal(3, x);
+
+    SetInt(x);
+    Assert.Equal(3, x);
+  }
+
+  private void SetInt(int x)
+  {
+    x = 42;
+  }
+  ```
+
+### [Value Type Parameters](https://app.pluralsight.com/course-player?clipId=c7932ad1-3008-4180-96e8-a418d3e1fe70)
+
+```cs
+[Fact]
+public void Test1()
+{
+  var x = GetInt();
+  Assert.Equal(3, x);
+
+  // SetInt(x);
+  // Assert.Equal(3, x);
+  SetInt(ref x);
+  Assert.Equal(42, x);
+}
+
+// private void SetInt(int x)
+// {
+//   x = 42;
+// }
+private void SetInt(ref int z)
+{
+  z = 42;
+}
+```
+
+### [Looking for Reference Types and Value Types](https://app.pluralsight.com/course-player?clipId=3a67526d-af7e-48f0-b896-5483e8da1200)
+
+- How to differentiate between a reference type and a value type:
+  - Whenever you are working with something that has been defined by a class, you are working with a reference type.
+  - Another way to define a type in C# is via `struct`.
+    - Needs to behave like a value type; typically very small.
+    - Can be more efficient than reference types for certain scenarios.
+    - Can have fields and methods; but some limitations.
+  - If you place your cursor on a type and press F12, we can see a metadata view.
+    - ![](2021-03-23-19-54-41.png)
+    - Note: int is a `struct`.
+      - Note that `int` is actually an alias for `Int32`.
+    - Similarly, `double` is actually a `Double` `struct`.
+    - `bool` &rarr; `Boolean`.
+    - Not all value types have a shortcut.
+      - `DateTime`.
+  - One special type: `string` (`String`)
+    - Always a reference type.
+    - But it often _behaves_ like a value type.
+
+### [The Special Case of Strings in .NET](https://app.pluralsight.com/course-player?clipId=1feddee0-38d4-4a52-a8e0-6f03f447972b)
+
+- Strings are immutable in C#.
+
+  ```cs
+  [Fact]
+  public void StringsBehaveLikeValueTypes()
+  {
+    string name = "Scott";
+    var upper = MakeUpperCase(name);
+
+    Assert.Equal("Scott", name);
+    Assert.Equal("SCOTT", upper);
+  }
+
+  private string MakeUpperCase(string parameter)
+  {
+    return parameter.ToUpper();
+  }
+  ```
+
+### [Taking Advantage of Garbage Collection](https://app.pluralsight.com/course-player?clipId=ce967f1b-b7c2-416c-b0e2-7917d832a46a)
+
+- The C# runtime garbage collector keeps track of objects and frees up memory accordingly.
+
+### [Summary](https://app.pluralsight.com/course-player?clipId=f66e31d9-1951-418e-aad1-370d6b34d79b)
+
+- ![](2021-03-23-20-04-53.png)
 
 ## Controlling the Flow of Execution
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=1428326e-49f9-4067-a655-900c87d8253d)
 
-### Branching with if Statements
+### [Branching with if Statements](https://app.pluralsight.com/course-player?clipId=b0bed4f5-32cf-4e87-a476-3a4c4dffcacf)
 
-### Looping with for, foreach, do, and while
+### [Looping with for, foreach, do, and while](https://app.pluralsight.com/course-player?clipId=428476f7-0c85-489f-838c-7361c464bce4)
 
-### Jumping with break and continue
+```cs
+foreach (double grade in grades)
+{
+  result.Low = Math.Min(grade, result.Low);
+  result.High = Math.Max(grade, result.High);
+  result.Average += grade;
+}
+```
 
-### Switching with the switch Statement
+```cs
+var index = 0;
+// Loop will always execute at least once.
+do
+{
+  result.Low = Math.Min(grades[index], result.Low);
+  result.High = Math.Max(grades[index], result.High);
+  result.Average += grades[index];
+  index += 1;
+} while (index < grades.Count);
+```
 
-### Pattern Matching with switch
+```cs
+var index = 0;
+while (index < grades.Count)
+{
+  result.Low = Math.Min(grades[index], result.Low);
+  result.High = Math.Max(grades[index], result.High);
+  result.Average += grades[index];
+  index += 1;
+}
+```
 
-### Challenge: Taking User Input from the Console
+```cs
+for (int index = 0; index < grades.Count; index += 1)
+{
+  result.Low = Math.Min(grades[index], result.Low);
+  result.High = Math.Max(grades[index], result.High);
+  result.Average += grades[index];
+}
+```
+
+### [Jumping with break and continue](https://app.pluralsight.com/course-player?clipId=83f514dd-e6e8-441e-a9e7-19243615ddbd)
+
+- `break`:
+  - Exit loop.
+- `continue`:
+  - Skip over the remaining lines of code, but continue to the next iteration.
+- `goto`:
+  - Go to an arbitrary label (e.g., `goto done;` and `done`)
+
+### [Switching with the switch Statement](https://app.pluralsight.com/course-player?clipId=5b6155b3-d2ed-42ed-aa1a-3a0103210b37)
+
+- Note: `char`, for a single character, is a struct (value type).
+  - Use single quotes with a `char`; double quotes would lead to the compiler treating it as a string.
+- In a `switch` statement, the C# compiler requires specific flow control (e.g., `break`).
+- In `gradebook/src/GradeBook/Book.cs`:
+
+  ```cs
+  public void AddLetterGrade(char letter)
+  {
+    switch (letter)
+    {
+      case 'A':
+        AddGrade(90);
+        break;
+
+      case 'B':
+        AddGrade(80);
+        break;
+
+      case 'C':
+        AddGrade(70);
+        break;
+
+      default:
+        AddGrade(0);
+        break;
+    }
+  }
+  ```
+
+### [Pattern Matching with switch](https://app.pluralsight.com/course-player?clipId=49a8adcf-51f5-416c-8220-32405415e59f)
+
+- As of C# 7, `switch` can match patterns.
+- In `gradebook/src/GradeBook/Statistics.cs`:
+
+  ```cs
+  namespace GradeBook
+  {
+    public class Statistics
+    {
+      public double Average;
+      public double High;
+      public double Low;
+      // Add Letter.
+      public char Letter;
+    }
+  }
+  ```
+
+- In `gradebook/src/GradeBook/Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+    class Program
+    {
+      static void Main(string[] args)
+      {
+
+        var book = new Book("Scott's Grade Book");
+        book.AddGrade(89.1);
+        book.AddGrade(90.5);
+        book.AddGrade(77.5);
+        var stats = book.GetStatistics();
+
+        Console.WriteLine($"The highest grade is {stats.High:N1}");
+        Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+        Console.WriteLine($"The average grade is {stats.Average:N1}");
+        // Print stats.Letter.
+        Console.WriteLine($"The letter is {stats.Letter}");
+      }
+    }
+  }
+  ```
+
+- In `gradebook/src/GradeBook/Book.cs`:
+
+  ```cs
+  public Statistics GetStatistics()
+  {
+    var result = new Statistics();
+    result.Average = 0.0;
+    result.High = double.MinValue;
+    result.Low = double.MaxValue;
+
+    foreach (double grade in grades)
+    {
+      result.Low = Math.Min(grade, result.Low);
+      result.High = Math.Max(grade, result.High);
+      result.Average += grade;
+    }
+
+    result.Average /= grades.Count;
+
+    switch (result.Average)
+    {
+      case var d when d >= 90.0:
+        result.Letter = 'A';
+        break;
+      case var d when d >= 80.0:
+        result.Letter = 'B';
+        break;
+      case var d when d >= 70.0:
+        result.Letter = 'C';
+        break;
+      case var d when d >= 60.0:
+        result.Letter = 'D';
+        break;
+      default:
+        result.Letter = 'F';
+        break;
+    }
+
+    return result;
+  }
+  ```
+
+### [Challenge: Taking User Input from the Console](https://app.pluralsight.com/course-player?clipId=2c1a1640-aad1-432a-b175-5531772bafaf)
+
+-
 
 ### One Solution
 
