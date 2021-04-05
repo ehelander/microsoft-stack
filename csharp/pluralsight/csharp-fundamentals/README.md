@@ -1646,29 +1646,362 @@ dotnet run --project src/GradeBook/GradeBook.csproj
 
 ## Building Types
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=36877d9c-72dd-4c46-a883-8538f5de1c54)
 
-### Overloading Methods
+### [Overloading Methods](https://app.pluralsight.com/course-player?clipId=b918a7cd-c3a6-41bb-8a68-13b12a18679a)
 
-### Defining Properties
+- Method overloading
+  - Remember that the return type is _not_ part of the method signature.
+- In `gradebook/src/GradeBook/Book.cs`:
 
-### Defining Property Getters and Setters
+  ```cs
+  public void AddGrade(char letter)
+  {
+    switch (letter)
+    {
+      case 'A':
+        AddGrade(90);
+        break;
 
-### Defining readonly Members
+      case 'B':
+        AddGrade(80);
+        break;
 
-### Defining const Members
+      case 'C':
+        AddGrade(70);
+        break;
 
-### Introducing Events and Delegates
+      default:
+        AddGrade(0);
+        break;
+    }
+  }
 
-### Defining a Delegate
+  public void AddGrade(double grade)
+  {
+    if (grade >= 0 && grade <= 100)
+    {
+      grades.Add(grade);
+    }
+    else
+    {
+      throw new ArgumentException($"Invalid {nameof(grade)}");
+    }
+  }
+  ```
 
-### Using Multi-cast Delegates
+### [Defining Properties](https://app.pluralsight.com/course-player?clipId=e0ce1ce1-3ad7-4890-979f-7ca77c162497)
 
-### Defining an Event
+- Differences from fields:
+  - Making a field public: Control is lost (e.g., opportunity to validate before changing a value).
+- Field
 
-### Subscribing to an Event
+  ```cs
+  public string Name;
+  ```
 
-### Summary
+- Property
+
+  ```cs
+  public string Name
+  {
+    get
+    {
+      return name;
+    }
+    set
+    {
+      // implicit variable: `value`
+      if (!String.IsNullOrEmpty(value))
+      {
+        name = value;
+      }
+    }
+  }
+  private string name;
+  ```
+
+  - Enables:
+
+    ```cs
+    // Uses set property method.
+    book.Name = "some name";
+    // Uses get property method.
+    Console.WriteLine($"For the book named {book.Name}");
+    ```
+
+### [Defining Property Getters and Setters](https://app.pluralsight.com/course-player?clipId=7fe05210-7dfb-46d0-898f-690c8669aa78)
+
+- Originally, C# required the private 'backing field' - the field backing the property.
+- Now, an auto-property:
+
+  ```cs
+  public string Name
+  {
+    get; set;
+  }
+  ```
+
+  - Transparent to the client code - no difference for field vs. property.
+  - But can affect reflection and serialization.
+  - Can apply different access modifiers to `get` vs. `set`.
+
+    ```cs
+    public string Name
+    {
+      get;
+      private set;
+    }
+    ```
+
+### [Defining readonly Members](https://app.pluralsight.com/course-player?clipId=36bbca95-96bb-4e5b-8efd-4bb324e68d85)
+
+- Ways to declare a constant in C#:
+
+  - `readonly` keyword.
+
+    - Can only initialize or assign in a constructor.
+
+    ```cs
+    readonly string category = "Science";
+    ```
+
+### [Defining const Members](https://app.pluralsight.com/course-player?clipId=c482ae82-d6e4-40d0-98a6-44b629faa390)
+
+- `const`
+
+  ```cs
+  const string category = "Science";
+  ```
+
+  - Stronger semantics than `readonly`.
+  - Cannot write to even in a constructor.
+  - Can declare local variables as `const`.
+  - Can make public:
+
+    ```cs
+    public const string CATEGORY = "Science";
+    ```
+
+  - Note that `const` fields are treated as static members of the class.
+
+    ```cs
+    Console.WriteLine(Book.CATEGORY);
+    ```
+
+### I[ntroducing Events and Delegates](https://app.pluralsight.com/course-player?clipId=e5af514f-da5e-400e-9b4d-04b8937a03e8)
+
+- Events have been around since the beginning of C# - but not used as often in today's frameworks (e.g., ASP.NET).
+  - Though popular in forms and desktop programming.
+  - Require 'delegates'.
+- Events are also difficult to understand.
+
+### [Defining a Delegate](https://app.pluralsight.com/course-player?clipId=44337a13-acca-456b-a25c-5045baa22c36)
+
+- A delegate defines a new type, describing what a method will look like (return type, parameter types, parameter number).
+- In `gradebook/test/GradeBook.Tests/TypeTests.cs`:
+
+  ```cs
+  using System;
+  using Xunit;
+
+  namespace GradeBook.Tests
+  {
+    public delegate string WriteLogDelegate(string logMessage);
+
+    public class TypeTests
+    {
+      [Fact]
+      public void WriteLogDelegateCanPointToMethod()
+      {
+        WriteLogDelegate log;
+
+        // Initialize WriteLogDelegate with ReturnMessage.
+        // log = new WriteLogDelegate(ReturnMessage);
+        // Shorthand:
+        log = ReturnMessage;
+
+        var result = log("Hello!");
+        Assert.Equal("Hello!", result);
+      }
+
+      string ReturnMessage(string message)
+      {
+        return message;
+      }
+    }
+  }
+  ```
+
+  - Could point WriteLogDelegate variable to any variable that returns a string and takes a string.
+
+### [Using Multi-cast Delegates](https://app.pluralsight.com/course-player?clipId=251f9345-3c0b-4e85-9dc3-46cedb20c5ef)
+
+- Delegates can invoke multiple methods (multi-cast delegates).
+
+  - E.g., via `+=`
+
+  ```cs
+  int count = 0;
+  [Fact]
+  public void WriteLogDelegateCanPointToMethod()
+  {
+    WriteLogDelegate log = ReturnMessage;
+    log += ReturnMessage;
+    log += IncrementCount;
+
+    var result = log("Hello!");
+    Assert.Equal(3, count);
+  }
+
+  string IncrementCount(string message)
+  {
+    count++;
+    return message.ToLower();
+  }
+  string ReturnMessage(string message)
+  {
+    count++;
+    return message;
+  }
+  ```
+
+### [Defining an Event](https://app.pluralsight.com/course-player?clipId=9c83e349-e0c6-412e-a766-d5785fea760f)
+
+- Convention: Events typically have 2 parameters
+  - `object sender` (base type)
+  - `EventArgs args`
+- In `gradebook/src/GradeBook/Book.cs`:
+
+  ```cs
+  using System;
+  using System.Collections.Generic;
+
+  namespace GradeBook
+  {
+    // Would normally place additional types in a separate file.
+    public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
+    public class Book
+    {
+      // ...
+
+      public void AddGrade(double grade)
+      {
+        if (grade >= 0 && grade <= 100)
+        {
+          grades.Add(grade);
+          // Only invoke if there are listeners.
+          if (GradeAdded != null)
+          {
+            GradeAdded(this, new EventArgs());
+          }
+        }
+        else
+        {
+          throw new ArgumentException($"Invalid {nameof(grade)}");
+        }
+      }
+
+      public event GradeAddedDelegate GradeAdded;
+
+      // ...
+    }
+  }
+  ```
+
+### [Subscribing to an Event](https://app.pluralsight.com/course-player?clipId=4d04688d-abf0-4eae-94fe-de1f60b3a79d)
+
+- Handling an event: Adding a method we want invoked when the class raises the event (invokes the delegate).
+- Marking the field as an `event` prevents assigning `null` (for instance).
+  - Can use `+=` or `-=`, but not `=`.
+- In `gradebook/src/GradeBook/Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+    class Program
+    {
+      static void Main(string[] args)
+      {
+
+        var book = new Book("Scott's Grade Book");
+        book.GradeAdded += OnGradeAdded;
+        book.GradeAdded += OnGradeAdded;
+        // Can remove:
+        book.GradeAdded -= OnGradeAdded;
+        book.GradeAdded += OnGradeAdded;
+
+        while (true)
+        {
+          Console.WriteLine("Enter a grade or 'q' to quit");
+          var input = Console.ReadLine();
+
+          if (input == "q")
+          {
+            break;
+          }
+
+          try
+          {
+            var grade = double.Parse(input);
+            book.AddGrade(grade);
+          }
+          catch (ArgumentException ex)
+          {
+            Console.WriteLine(ex.Message);
+          }
+          catch (FormatException ex)
+          {
+            Console.WriteLine(ex.Message);
+          }
+          finally
+          {
+            Console.WriteLine("**");
+          }
+        }
+
+        var stats = book.GetStatistics();
+
+        Console.WriteLine(Book.CATEGORY);
+        Console.WriteLine($"For the book named {book.Name}");
+        Console.WriteLine($"The highest grade is {stats.High:N1}");
+        Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+        Console.WriteLine($"The average grade is {stats.Average:N1}");
+        Console.WriteLine($"The letter is {stats.Letter}");
+      }
+
+      static void OnGradeAdded(object sender, EventArgs e)
+      {
+        Console.WriteLine("A grade was added.");
+      }
+    }
+  }
+  ```
+
+  ```txt
+  ➜  gradebook git:(main) ✗ dotnet run --project src/GradeBook/GradeBook.csproj
+  Enter a grade or 'q' to quit
+  93
+  A grade was added.
+  A grade was added.
+  **
+  Enter a grade or 'q' to quit
+  103
+  Invalid grade
+  **
+  Enter a grade or 'q' to quit
+  q
+  Science
+  For the book named Scott's Grade Book
+  The highest grade is 93.0
+  The lowest grade is 93.0
+  The average grade is 93.0
+  The letter is A
+  ```
+
+### [Summary](https://app.pluralsight.com/course-player?clipId=c0b6893a-b6f1-4070-91f5-3dbe00cdb1de)
 
 ## Object-oriented Programming with C#
 
