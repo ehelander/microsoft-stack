@@ -942,7 +942,7 @@ namespace GradeBook
 
 - A solution file: A file that keeps track of multiple projects.
   - Understood by Visual Studio and the CLI.
-- Create solution in `gradebok`:
+- Create solution in `gradebook`:
 
 ```sh
 # Create solution file.
@@ -2005,17 +2005,205 @@ dotnet run --project src/GradeBook/GradeBook.csproj
 
 ## Object-oriented Programming with C#
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=ed2f27d7-b95a-42d6-8530-8af424d25a90)
 
-### The Pillars of OOP
+### [The Pillars of OOP](https://app.pluralsight.com/course-player?clipId=801404f6-f3ef-4b18-8d07-09e1a49f35ed)
 
-### Deriving from a Base Class
+- 3 pillars of OOP
+  - Encapsulation
+    - Hiding details.
+    - Most important pillar.
+  - Inheritance
+    - Enables code reuse across similar classes
+    - Often overrated for use in solving day-to-day problems.
+  - Polymorphism
+    - Objects of the same type that behave differently
 
-### Chaining Constructors
+### [Deriving from a Base Class](https://app.pluralsight.com/course-player?clipId=bb1119b1-add2-46fa-a8e7-7606bac7c2ae)
 
-### Deriving from System.Object
+- A class contains members (representing the state and behavior of the class).
+  - Base class members can be inherited by a derived class.
+- Example use case: A number of objects require a `name`.
+  - Rather than adding a `name` property to a large number of classes, create a `NamedObject`.
+  - `Book` _is_ a `NamedObject`.
+- In `gradebook\src\GradeBook\Book.cs`:
 
-### Setting up a Scenario
+  ```cs
+
+  using System;
+  using System.Collections.Generic;
+
+  namespace GradeBook
+  {
+      public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
+      // Best practice: Place classes in their own dedicated files.
+      // Left here for convenience.
+      public class NamedObject
+      {
+          public string Name
+          {
+              get; set;
+          }
+      }
+
+      public class Book : NamedObject
+      {
+          public Book(string name)
+          {
+              grades = new List<double>();
+              Name = name;
+          }
+
+          // ...
+
+          // Remove `Name` property.
+      }
+  }
+  ```
+
+- Then, in `gradebook\src\GradeBook\Program.cs`, for instance, we could use `book.Name` without knowing whether it was inherited.
+- Note that the `Book`'s constructor requires a `Name`; it is not currently required for `NamedObject`.
+
+### [Chaining Constructors](https://app.pluralsight.com/course-player?clipId=f68834f1-f6fe-4fab-8e7c-e2d652bed6fb)
+
+- One way to generate a constructor:
+
+  - Place cursor on class &rarr; Ctrl + `.` &rarr; Generate Constructor.
+    - Works in both VS and VS Code.
+
+  ```cs
+  public class NamedObject
+  {
+      public NamedObject(string name)
+      {
+          Name = name;
+      }
+
+      public string Name
+      {
+          get; set;
+      }
+  }
+  ```
+
+- Then `Book` presents an error:
+
+  ```txt
+  There is no argument given that corresponds to the required formal parameter 'name' of 'NamedObject.NamedObject(string)' [GradeBook]csharp(CS7036)
+  ```
+
+  - The base class requires a `name`; but we haven't specified how to construct the base class.
+  - We can use `: base()` to call the base class's constructor.
+
+    ```cs
+    using System;
+    using System.Collections.Generic;
+
+    namespace GradeBook
+    {
+        public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
+        public class NamedObject
+        {
+            public NamedObject(string name)
+            {
+                Name = name;
+            }
+
+            public string Name
+            {
+                get; set;
+            }
+        }
+
+        public class Book : NamedObject
+        {
+            public Book(string name) : base(name)
+            {
+                grades = new List<double>();
+                Name = name;
+            }
+
+            // ...
+        }
+    }
+    ```
+
+### [Deriving from System.Object](https://app.pluralsight.com/course-player?clipId=99e63e4a-d97c-4821-8aa8-c07f6864cc24)
+
+- Every class in C# has a base class: `Object` (`System.Object`).
+  - View: Cursor -> F12 to view metadata.
+  - Note static methods.
+  - Keyword: `object` (maps to `System.Object`).
+
+### [Setting up a Scenario](https://app.pluralsight.com/course-player?clipId=77e84a7b-024e-4339-a99f-f4b3f35ab795)
+
+- Extract `EnterGrades` method in `Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+      class Program
+      {
+          static void Main(string[] args)
+          {
+
+              var book = new Book("Scott's Grade Book");
+              book.GradeAdded += OnGradeAdded;
+
+              EnterGrades(book);
+
+              var stats = book.GetStatistics();
+
+              Console.WriteLine(Book.CATEGORY);
+              Console.WriteLine($"For the book named {book.Name}");
+              Console.WriteLine($"The highest grade is {stats.High:N1}");
+              Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+              Console.WriteLine($"The average grade is {stats.Average:N1}");
+              Console.WriteLine($"The letter is {stats.Letter}");
+          }
+
+          private static void EnterGrades(Book book)
+          {
+              while (true)
+              {
+                  Console.WriteLine("Enter a grade or 'q' to quit");
+                  var input = Console.ReadLine();
+
+                  if (input == "q")
+                  {
+                      break;
+                  }
+
+                  try
+                  {
+                      var grade = double.Parse(input);
+                      book.AddGrade(grade);
+                  }
+                  catch (ArgumentException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  catch (FormatException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  finally
+                  {
+                      Console.WriteLine("**");
+                  }
+              }
+          }
+
+          static void OnGradeAdded(object sender, EventArgs e)
+          {
+              Console.WriteLine("A grade was added.");
+          }
+      }
+  }
+  ```
 
 ### Defining an Abstract Class
 

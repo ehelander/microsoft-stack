@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj": {}
+    "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\src\\GradeBook\\GradeBook.csproj": {}
   },
   "projects": {
-    "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj": {
+    "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\src\\GradeBook\\GradeBook.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
+        "projectUniqueName": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\src\\GradeBook\\GradeBook.csproj",
         "projectName": "GradeBook",
-        "projectPath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj",
-        "packagesPath": "/Users/ehelander/.nuget/packages/",
-        "outputPath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/obj/",
+        "projectPath": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\src\\GradeBook\\GradeBook.csproj",
+        "packagesPath": "C:\\Users\\eric.helander\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\src\\GradeBook\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/ehelander/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\eric.helander\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -52,7 +54,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.201/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

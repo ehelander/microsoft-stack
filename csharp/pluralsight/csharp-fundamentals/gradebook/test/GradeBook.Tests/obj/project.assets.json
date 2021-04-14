@@ -5638,32 +5638,34 @@
     ]
   },
   "packageFolders": {
-    "/Users/ehelander/.nuget/packages/": {}
+    "C:\\Users\\eric.helander\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/test/GradeBook.Tests/GradeBook.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\test\\GradeBook.Tests\\GradeBook.Tests.csproj",
       "projectName": "GradeBook.Tests",
-      "projectPath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/test/GradeBook.Tests/GradeBook.Tests.csproj",
-      "packagesPath": "/Users/ehelander/.nuget/packages/",
-      "outputPath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/test/GradeBook.Tests/obj/",
+      "projectPath": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\test\\GradeBook.Tests\\GradeBook.Tests.csproj",
+      "packagesPath": "C:\\Users\\eric.helander\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\test\\GradeBook.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/ehelander/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\eric.helander\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj": {
-              "projectPath": "/Users/ehelander/repo/personal/microsoft-stack/csharp/pluralsight/csharp-fundamentals/gradebook/src/GradeBook/GradeBook.csproj"
+            "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\src\\GradeBook\\GradeBook.csproj": {
+              "projectPath": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\src\\GradeBook\\GradeBook.csproj"
             }
           }
         }
@@ -5714,7 +5716,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.201/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
