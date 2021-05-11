@@ -102,12 +102,12 @@
     - [Introduction](#introduction-8)
     - [Working with Non-nullable Reference Types](#working-with-non-nullable-reference-types)
     - [Summary](#summary-8)
-    - [Going Further with C](#going-further-with-c)
+  - [Going Further with C](#going-further-with-c)
     - [Introduction](#introduction-9)
     - [Generics](#generics)
-    - [Async C](#async-c)
+    - [Async C#](#async-c)
     - [LINQ](#linq)
-    - [Effective C](#effective-c)
+    - [Effective C#](#effective-c)
 
 ## Course Overview
 
@@ -3253,20 +3253,47 @@ dotnet run --project src\GradeBook
 
 ## Catching up with the Latest in C#
 
-### Introduction
+### [Introduction](https://app.pluralsight.com/course-player?clipId=de17f22f-d2bd-468a-9eff-81f27094f7eb)
 
-### Working with Non-nullable Reference Types
+### [Working with Non-nullable Reference Types](https://app.pluralsight.com/course-player?clipId=9cd83fb8-c353-4756-ba6c-32144da115d2)
 
-### Summary
+- We received a NullReferenceException at runtime.
+- A feature was added to the C# compiler to aggressively search the program to avoid NullReferenceExceptions at runtime.
+- After commenting out the `grades` initialization in `Book.cs`...
 
-### Going Further with C#
+  ```cs
+  public InMemoryBook(string name) : base(name)
+  {
+      // grades = new List<double>();
+      Name = name;
+  }
+  ```
 
-### Introduction
+- ...and doing a `dotnet build`, we now receive a warning:
+  - ![](2021-05-11-14-12-12.png)
+- In .NET 8, can create types that are non-nullable by default.
+  - Before enabled by default, can specify whether reference types should be non-nullable by default:
+    - ![](2021-05-11-14-22-25.png)
+- To allow assigning null, use `Book? book`.
 
-### Generics
+### [Summary](https://app.pluralsight.com/course-player?clipId=ac7795be-9508-4fda-bdd8-03bdb5f0e9cd)
 
-### Async C#
+## Going Further with C#
 
-### LINQ
+### [Introduction](https://app.pluralsight.com/course-player?clipId=ed16df3a-a550-4a32-9f52-affdbcb30904)
 
-### Effective C#
+### [Generics](https://app.pluralsight.com/course-player?clipId=df507506-72f0-4099-b035-1b667dafff07)
+
+- ![](2021-05-11-14-31-16.png)
+
+### [Async C#](https://app.pluralsight.com/course-player?clipId=16f3ffc4-267e-4e59-999b-9dd8cecc94e7)
+
+- ![](2021-05-11-14-31-53.png)
+
+### [LINQ](https://app.pluralsight.com/course-player?clipId=afce4f4a-9956-45a7-96c4-5c37d5b85459)
+
+- ![](2021-05-11-14-32-13.png)
+
+### [Effective C#](https://app.pluralsight.com/course-player?clipId=12291494-5b2e-406b-b9ee-0256328d9aa7)
+
+- ![](2021-05-11-14-32-37.png)
