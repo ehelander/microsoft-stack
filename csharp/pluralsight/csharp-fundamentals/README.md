@@ -2205,19 +2205,1051 @@ dotnet run --project src/GradeBook/GradeBook.csproj
   }
   ```
 
-### Defining an Abstract Class
+### [Defining an Abstract Class](https://app.pluralsight.com/course-player?clipId=c57a51c6-d2e8-4fa0-a316-7e3eb53b85bf)
 
-### Defining an Interface
+- C# only allows single inheritance.
+- Can only overwrite abstract or virtual methods.
+- `gradebook\src\GradeBook\Book.cs`:
 
-### Writing Grades to a File
+  ```cs
+  using System;
+  using System.Collections.Generic;
 
-### Using IDisposable
+  namespace GradeBook
+  {
+      public delegate void GradeAddedDelegate(object sender, EventArgs args);
 
-### A Statistical Challenge
+      public class NamedObject
+      {
+          public NamedObject(string name)
+          {
+              Name = name;
+          }
 
-### Refactoring Statistics
+          public string Name
+          {
+              get; set;
+          }
+      }
 
-### Summary
+      public abstract class Book : NamedObject
+      {
+          protected Book(string name) : base(name)
+          {
+          }
+
+          public abstract void AddGrade(double grade);
+      }
+
+      public class InMemoryBook : Book
+      {
+          public InMemoryBook(string name) : base(name)
+          {
+              grades = new List<double>();
+              Name = name;
+          }
+
+          public void AddGrade(char letter)
+          {
+              switch (letter)
+              {
+                  case 'A':
+                      AddGrade(90);
+                      break;
+
+                  case 'B':
+                      AddGrade(80);
+                      break;
+
+                  case 'C':
+                      AddGrade(70);
+                      break;
+
+                  default:
+                      AddGrade(0);
+                      break;
+              }
+          }
+
+          public override void AddGrade(double grade)
+          {
+              if (grade >= 0 && grade <= 100)
+              {
+                  grades.Add(grade);
+                  // Only invoke if there are listeners.
+                  if (GradeAdded != null)
+                  {
+                      GradeAdded(this, new EventArgs());
+                  }
+              }
+              else
+              {
+                  throw new ArgumentException($"Invalid {nameof(grade)}");
+              }
+          }
+
+          public event GradeAddedDelegate GradeAdded;
+
+          public Statistics GetStatistics()
+          {
+              var result = new Statistics();
+              result.Average = 0.0;
+              result.High = double.MinValue;
+              result.Low = double.MaxValue;
+
+              foreach (double grade in grades)
+              {
+                  result.Low = Math.Min(grade, result.Low);
+                  result.High = Math.Max(grade, result.High);
+                  result.Average += grade;
+              }
+
+              result.Average /= grades.Count;
+
+              switch (result.Average)
+              {
+                  case var d when d >= 90.0:
+                      result.Letter = 'A';
+                      break;
+                  case var d when d >= 80.0:
+                      result.Letter = 'B';
+                      break;
+                  case var d when d >= 70.0:
+                      result.Letter = 'C';
+                      break;
+                  case var d when d >= 60.0:
+                      result.Letter = 'D';
+                      break;
+                  default:
+                      result.Letter = 'F';
+                      break;
+              }
+
+              return result;
+          }
+
+          private List<double> grades;
+
+          public const string CATEGORY = "Science";
+      }
+  }
+  ```
+
+- `gradebook\src\GradeBook\Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+      class Program
+      {
+          static void Main(string[] args)
+          {
+
+              var book = new InMemoryBook("Scott's Grade Book");
+              book.GradeAdded += OnGradeAdded;
+
+              EnterGrades(book);
+
+              var stats = book.GetStatistics();
+
+              Console.WriteLine(InMemoryBook.CATEGORY);
+              Console.WriteLine($"For the book named {book.Name}");
+              Console.WriteLine($"The highest grade is {stats.High:N1}");
+              Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+              Console.WriteLine($"The average grade is {stats.Average:N1}");
+              Console.WriteLine($"The letter is {stats.Letter}");
+          }
+
+          private static void EnterGrades(Book book)
+          {
+              while (true)
+              {
+                  Console.WriteLine("Enter a grade or 'q' to quit");
+                  var input = Console.ReadLine();
+
+                  if (input == "q")
+                  {
+                      break;
+                  }
+
+                  try
+                  {
+                      var grade = double.Parse(input);
+                      book.AddGrade(grade);
+                  }
+                  catch (ArgumentException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  catch (FormatException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  finally
+                  {
+                      Console.WriteLine("**");
+                  }
+              }
+          }
+
+          static void OnGradeAdded(object sender, EventArgs e)
+          {
+              Console.WriteLine("A grade was added.");
+          }
+      }
+  }
+  ```
+
+### [Defining an Interface](https://app.pluralsight.com/course-player?clipId=5cdfef6b-e963-4246-8396-489a5dffeb81)
+
+- Another approach to encapsulation & polymorphism: Interfaces.
+- An interface definition is 'pure', containing no implementation details (only defining members).
+- C# convention: Interface type begins with `I`.
+- In an abstract class:
+  - An abstract method is implicitly virtual. It must be overridden.
+  - A `virtual` method _may_ be overridden.
+- `Book.cs`:
+
+  ```cs
+  using System;
+  using System.Collections.Generic;
+
+  namespace GradeBook
+  {
+      public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
+      public class NamedObject
+      {
+          public NamedObject(string name)
+          {
+              Name = name;
+          }
+
+          public string Name
+          {
+              get; set;
+          }
+      }
+
+      public interface IBook
+      {
+          void AddGrade(double grade);
+          Statistics GetStatistics();
+          string Name { get; }
+          event GradeAddedDelegate GradeAdded;
+      }
+
+      public abstract class Book : NamedObject, IBook
+      {
+          protected Book(string name) : base(name)
+          {
+          }
+
+          public virtual event GradeAddedDelegate GradeAdded;
+
+          public abstract void AddGrade(double grade);
+
+          public virtual Statistics GetStatistics()
+          {
+              throw new NotImplementedException();
+          }
+      }
+
+      public class InMemoryBook : Book
+      {
+          public InMemoryBook(string name) : base(name)
+          {
+              grades = new List<double>();
+              Name = name;
+          }
+
+          public void AddGrade(char letter)
+          {
+              switch (letter)
+              {
+                  case 'A':
+                      AddGrade(90);
+                      break;
+
+                  case 'B':
+                      AddGrade(80);
+                      break;
+
+                  case 'C':
+                      AddGrade(70);
+                      break;
+
+                  default:
+                      AddGrade(0);
+                      break;
+              }
+          }
+
+          public override void AddGrade(double grade)
+          {
+              if (grade >= 0 && grade <= 100)
+              {
+                  grades.Add(grade);
+                  // Only invoke if there are listeners.
+                  if (GradeAdded != null)
+                  {
+                      GradeAdded(this, new EventArgs());
+                  }
+              }
+              else
+              {
+                  throw new ArgumentException($"Invalid {nameof(grade)}");
+              }
+          }
+
+          public override event GradeAddedDelegate GradeAdded;
+
+          public override Statistics GetStatistics()
+          {
+              var result = new Statistics();
+              result.Average = 0.0;
+              result.High = double.MinValue;
+              result.Low = double.MaxValue;
+
+              foreach (double grade in grades)
+              {
+                  result.Low = Math.Min(grade, result.Low);
+                  result.High = Math.Max(grade, result.High);
+                  result.Average += grade;
+              }
+
+              result.Average /= grades.Count;
+
+              switch (result.Average)
+              {
+                  case var d when d >= 90.0:
+                      result.Letter = 'A';
+                      break;
+                  case var d when d >= 80.0:
+                      result.Letter = 'B';
+                      break;
+                  case var d when d >= 70.0:
+                      result.Letter = 'C';
+                      break;
+                  case var d when d >= 60.0:
+                      result.Letter = 'D';
+                      break;
+                  default:
+                      result.Letter = 'F';
+                      break;
+              }
+
+              return result;
+          }
+
+          private List<double> grades;
+
+          public const string CATEGORY = "Science";
+      }
+  }
+  ```
+
+- `Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+      class Program
+      {
+          static void Main(string[] args)
+          {
+
+              var book = new InMemoryBook("Scott's Grade Book");
+              book.GradeAdded += OnGradeAdded;
+
+              EnterGrades(book);
+
+              var stats = book.GetStatistics();
+
+              Console.WriteLine(InMemoryBook.CATEGORY);
+              Console.WriteLine($"For the book named {book.Name}");
+              Console.WriteLine($"The highest grade is {stats.High:N1}");
+              Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+              Console.WriteLine($"The average grade is {stats.Average:N1}");
+              Console.WriteLine($"The letter is {stats.Letter}");
+          }
+
+          private static void EnterGrades(IBook book)
+          {
+              while (true)
+              {
+                  Console.WriteLine("Enter a grade or 'q' to quit");
+                  var input = Console.ReadLine();
+
+                  if (input == "q")
+                  {
+                      break;
+                  }
+
+                  try
+                  {
+                      var grade = double.Parse(input);
+                      book.AddGrade(grade);
+                  }
+                  catch (ArgumentException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  catch (FormatException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  finally
+                  {
+                      Console.WriteLine("**");
+                  }
+              }
+          }
+
+          static void OnGradeAdded(object sender, EventArgs e)
+          {
+              Console.WriteLine("A grade was added.");
+          }
+      }
+  }
+  ```
+
+### [Writing Grades to a File](https://app.pluralsight.com/course-player?clipId=85223d24-bf03-4d67-89c9-a42079be4ce2)
+
+- `Book.cs`:
+
+  ```cs
+  using System;
+  using System.Collections.Generic;
+  using System.IO;
+
+  namespace GradeBook
+  {
+      public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
+      public class NamedObject
+      {
+          public NamedObject(string name)
+          {
+              Name = name;
+          }
+
+          public string Name
+          {
+              get; set;
+          }
+      }
+
+      public interface IBook
+      {
+          void AddGrade(double grade);
+          Statistics GetStatistics();
+          string Name { get; }
+          event GradeAddedDelegate GradeAdded;
+      }
+
+      public abstract class Book : NamedObject, IBook
+      {
+          protected Book(string name) : base(name)
+          {
+          }
+
+          public abstract event GradeAddedDelegate GradeAdded;
+          public abstract void AddGrade(double grade);
+          public abstract Statistics GetStatistics();
+      }
+
+      public class DiskBook : Book
+      {
+          public DiskBook(string name) : base(name)
+          {
+          }
+
+          public override event GradeAddedDelegate GradeAdded;
+
+          public override void AddGrade(double grade)
+          {
+              var writer = File.AppendText($"{Name}.txt");
+              writer.WriteLine(grade);
+          }
+
+          public override Statistics GetStatistics()
+          {
+              throw new System.NotImplementedException();
+          }
+      }
+
+      public class InMemoryBook : Book
+      {
+          public InMemoryBook(string name) : base(name)
+          {
+              grades = new List<double>();
+              Name = name;
+          }
+
+          public void AddGrade(char letter)
+          {
+              switch (letter)
+              {
+                  case 'A':
+                      AddGrade(90);
+                      break;
+
+                  case 'B':
+                      AddGrade(80);
+                      break;
+
+                  case 'C':
+                      AddGrade(70);
+                      break;
+
+                  default:
+                      AddGrade(0);
+                      break;
+              }
+          }
+
+          public override void AddGrade(double grade)
+          {
+              if (grade >= 0 && grade <= 100)
+              {
+                  grades.Add(grade);
+                  // Only invoke if there are listeners.
+                  if (GradeAdded != null)
+                  {
+                      GradeAdded(this, new EventArgs());
+                  }
+              }
+              else
+              {
+                  throw new ArgumentException($"Invalid {nameof(grade)}");
+              }
+          }
+
+          public override event GradeAddedDelegate GradeAdded;
+
+          public override Statistics GetStatistics()
+          {
+              var result = new Statistics();
+              result.Average = 0.0;
+              result.High = double.MinValue;
+              result.Low = double.MaxValue;
+
+              foreach (double grade in grades)
+              {
+                  result.Low = Math.Min(grade, result.Low);
+                  result.High = Math.Max(grade, result.High);
+                  result.Average += grade;
+              }
+
+              result.Average /= grades.Count;
+
+              switch (result.Average)
+              {
+                  case var d when d >= 90.0:
+                      result.Letter = 'A';
+                      break;
+                  case var d when d >= 80.0:
+                      result.Letter = 'B';
+                      break;
+                  case var d when d >= 70.0:
+                      result.Letter = 'C';
+                      break;
+                  case var d when d >= 60.0:
+                      result.Letter = 'D';
+                      break;
+                  default:
+                      result.Letter = 'F';
+                      break;
+              }
+
+              return result;
+          }
+
+          private List<double> grades;
+
+          public const string CATEGORY = "Science";
+      }
+  }
+  ```
+
+- `Program.cs`:
+
+  ```cs
+  using System;
+  namespace GradeBook
+  {
+      class Program
+      {
+          static void Main(string[] args)
+          {
+
+              IBook book = new DiskBook("Scott's Grade Book");
+              book.GradeAdded += OnGradeAdded;
+
+              EnterGrades(book);
+
+              var stats = book.GetStatistics();
+
+              Console.WriteLine($"For the book named {book.Name}");
+              Console.WriteLine($"The highest grade is {stats.High:N1}");
+              Console.WriteLine($"The lowest grade is {stats.Low:N1}");
+              Console.WriteLine($"The average grade is {stats.Average:N1}");
+              Console.WriteLine($"The letter is {stats.Letter}");
+          }
+
+          private static void EnterGrades(IBook book)
+          {
+              while (true)
+              {
+                  Console.WriteLine("Enter a grade or 'q' to quit");
+                  var input = Console.ReadLine();
+
+                  if (input == "q")
+                  {
+                      break;
+                  }
+
+                  try
+                  {
+                      var grade = double.Parse(input);
+                      book.AddGrade(grade);
+                  }
+                  catch (ArgumentException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  catch (FormatException ex)
+                  {
+                      Console.WriteLine(ex.Message);
+                  }
+                  finally
+                  {
+                      Console.WriteLine("**");
+                  }
+              }
+          }
+
+          static void OnGradeAdded(object sender, EventArgs e)
+          {
+              Console.WriteLine("A grade was added.");
+          }
+      }
+  }
+  ```
+
+- Run:
+
+```ps1
+dotnet run --project src\GradeBook
+```
+
+- We can enter a single grade, but attempting to write a second grade produces: `Unhandled exception. System.IO.IOException: The process cannot access the file 'C:\Users\eric.helander\repo\personal\microsoft-stack\csharp\pluralsight\csharp-fundamentals\gradebook\Scott's Grade Book.txt' because it is being used by another process.`.
+
+### [Using IDisposable](https://app.pluralsight.com/course-player?clipId=62889348-4e3d-41a7-b3d5-79be3650c6df)
+
+- Currently, we open a file for writing - but then it's locked for writing and cannot be accessed a second time.
+- 2 solutions:
+  - Keep the file open (make the `writer` a member so we can access it again).
+    - But a bigger issue: Want to close a file when you open it. We could use `.Close()` - but if an exception were thrown while writing, it would remain open.
+  - Use `using`.
+- Go to metadata definition of `.AppendText()` (`F12`). Then `StreamWriter`. Then `TextWriter`.
+
+  - `TextWriter` implements `IDisposable` &rarr; `Dispose()`.
+    - ![](2021-05-11-13-16-49.png)
+    - Tells the OS to clean up these object as quickly as possible. Many classes implement this interface, indicating they have something to clean up (free/release).
+    - So we could use `writer.Dispose();`.
+      - Often `Dispose()` does the same thing as `Close()`.
+    - To make sure it's always called: `using`.
+      - The C# compiler essentially generates a try-finally.
+
+- `Book.cs`
+
+  ```cs
+
+  using System;
+  using System.Collections.Generic;
+  using System.IO;
+
+  namespace GradeBook
+  {
+      public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
+      public class NamedObject
+      {
+          public NamedObject(string name)
+          {
+              Name = name;
+          }
+
+          public string Name
+          {
+              get; set;
+          }
+      }
+
+      public interface IBook
+      {
+          void AddGrade(double grade);
+          Statistics GetStatistics();
+          string Name { get; }
+          event GradeAddedDelegate GradeAdded;
+      }
+
+      public abstract class Book : NamedObject, IBook
+      {
+          protected Book(string name) : base(name)
+          {
+          }
+
+          public abstract event GradeAddedDelegate GradeAdded;
+          public abstract void AddGrade(double grade);
+          public abstract Statistics GetStatistics();
+      }
+
+      public class DiskBook : Book
+      {
+          public DiskBook(string name) : base(name)
+          {
+          }
+
+          public override event GradeAddedDelegate GradeAdded;
+
+          public override void AddGrade(double grade)
+          {
+              using (var writer = File.AppendText($"{Name}.txt"))
+              {
+                  writer.WriteLine(grade);
+                  if (GradeAdded != null)
+                  {
+                      GradeAdded(this, new EventArgs());
+                  }
+              }
+          }
+
+          public override Statistics GetStatistics()
+          {
+              throw new System.NotImplementedException();
+          }
+      }
+
+      public class InMemoryBook : Book
+      {
+          public InMemoryBook(string name) : base(name)
+          {
+              grades = new List<double>();
+              Name = name;
+          }
+
+          public void AddGrade(char letter)
+          {
+              switch (letter)
+              {
+                  case 'A':
+                      AddGrade(90);
+                      break;
+
+                  case 'B':
+                      AddGrade(80);
+                      break;
+
+                  case 'C':
+                      AddGrade(70);
+                      break;
+
+                  default:
+                      AddGrade(0);
+                      break;
+              }
+          }
+
+          public override void AddGrade(double grade)
+          {
+              if (grade >= 0 && grade <= 100)
+              {
+                  grades.Add(grade);
+                  // Only invoke if there are listeners.
+                  if (GradeAdded != null)
+                  {
+                      GradeAdded(this, new EventArgs());
+                  }
+              }
+              else
+              {
+                  throw new ArgumentException($"Invalid {nameof(grade)}");
+              }
+          }
+
+          public override event GradeAddedDelegate GradeAdded;
+
+          public override Statistics GetStatistics()
+          {
+              var result = new Statistics();
+              result.Average = 0.0;
+              result.High = double.MinValue;
+              result.Low = double.MaxValue;
+
+              foreach (double grade in grades)
+              {
+                  result.Low = Math.Min(grade, result.Low);
+                  result.High = Math.Max(grade, result.High);
+                  result.Average += grade;
+              }
+
+              result.Average /= grades.Count;
+
+              switch (result.Average)
+              {
+                  case var d when d >= 90.0:
+                      result.Letter = 'A';
+                      break;
+                  case var d when d >= 80.0:
+                      result.Letter = 'B';
+                      break;
+                  case var d when d >= 70.0:
+                      result.Letter = 'C';
+                      break;
+                  case var d when d >= 60.0:
+                      result.Letter = 'D';
+                      break;
+                  default:
+                      result.Letter = 'F';
+                      break;
+              }
+
+              return result;
+          }
+
+          private List<double> grades;
+
+          public const string CATEGORY = "Science";
+      }
+  }
+  ```
+
+### [A Statistical Challenge](https://app.pluralsight.com/course-player?clipId=39d08795-7ae5-42fa-be08-c9aab7868cdd)
+
+- Remember: Separate deciding from doing. Right now, `GetStatistics()` is deciding and doing, and cannot be accessed from other classes.
+
+### [Refactoring Statistics](https://app.pluralsight.com/course-player?clipId=211d9a42-ab66-451e-8199-df52ff41ad39)
+
+- `Statistics.cs`:
+
+  ```cs
+  using System;
+
+  namespace GradeBook
+  {
+      public class Statistics
+      {
+          public double Average
+          {
+              get
+              {
+                  return Sum / Count;
+              }
+          }
+          public double High;
+          public double Low;
+          public double Sum;
+          public int Count;
+          public char Letter
+          {
+              get
+              {
+                  switch (Average)
+                  {
+                      case var d when d >= 90.0:
+                          return 'A';
+                      case var d when d >= 80.0:
+                          return 'B';
+                      case var d when d >= 70.0:
+                          return 'C';
+                      case var d when d >= 60.0:
+                          return 'D';
+                      default:
+                          return 'F';
+                  }
+              }
+          }
+
+          public void Add(double number)
+          {
+              Sum += number;
+              Count += 1;
+
+              Low = Math.Min(number, Low);
+              High = Math.Max(number, High);
+          }
+
+          public Statistics()
+          {
+              Count = 0;
+              Sum = 0.0;
+              High = double.MinValue;
+              Low = double.MaxValue;
+          }
+      }
+  }
+  ```
+
+- `Book.cs`:
+
+  ```cs
+  using System;
+  using System.Collections.Generic;
+  using System.IO;
+
+  namespace GradeBook
+  {
+      public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
+      public class NamedObject
+      {
+          public NamedObject(string name)
+          {
+              Name = name;
+          }
+
+          public string Name
+          {
+              get; set;
+          }
+      }
+
+      public interface IBook
+      {
+          void AddGrade(double grade);
+          Statistics GetStatistics();
+          string Name { get; }
+          event GradeAddedDelegate GradeAdded;
+      }
+
+      public abstract class Book : NamedObject, IBook
+      {
+          protected Book(string name) : base(name)
+          {
+          }
+
+          public abstract event GradeAddedDelegate GradeAdded;
+          public abstract void AddGrade(double grade);
+          public abstract Statistics GetStatistics();
+      }
+
+      public class DiskBook : Book
+      {
+          public DiskBook(string name) : base(name)
+          {
+          }
+
+          public override event GradeAddedDelegate GradeAdded;
+
+          public override void AddGrade(double grade)
+          {
+              // Open a file; append to the end.
+              using (var writer = File.AppendText($"{Name}.txt"))
+              {
+                  writer.WriteLine(grade);
+                  if (GradeAdded != null)
+                  {
+                      GradeAdded(this, new EventArgs());
+                  }
+              }
+          }
+
+          public override Statistics GetStatistics()
+          {
+              var result = new Statistics();
+
+              // Open a file for reading.
+              using (var reader = File.OpenText($"{Name}.txt"))
+              {
+                  var line = reader.ReadLine();
+                  while (line != null)
+                  {
+                      var number = double.Parse(line);
+                      result.Add(number);
+                      line = reader.ReadLine();
+                  }
+              }
+
+              return result;
+          }
+      }
+
+      public class InMemoryBook : Book
+      {
+          public InMemoryBook(string name) : base(name)
+          {
+              grades = new List<double>();
+              Name = name;
+          }
+
+          public void AddGrade(char letter)
+          {
+              switch (letter)
+              {
+                  case 'A':
+                      AddGrade(90);
+                      break;
+
+                  case 'B':
+                      AddGrade(80);
+                      break;
+
+                  case 'C':
+                      AddGrade(70);
+                      break;
+
+                  default:
+                      AddGrade(0);
+                      break;
+              }
+          }
+
+          public override void AddGrade(double grade)
+          {
+              if (grade >= 0 && grade <= 100)
+              {
+                  grades.Add(grade);
+                  // Only invoke if there are listeners.
+                  if (GradeAdded != null)
+                  {
+                      GradeAdded(this, new EventArgs());
+                  }
+              }
+              else
+              {
+                  throw new ArgumentException($"Invalid {nameof(grade)}");
+              }
+          }
+
+          public override event GradeAddedDelegate GradeAdded;
+
+          public override Statistics GetStatistics()
+          {
+              var result = new Statistics();
+
+              foreach (double grade in grades)
+              {
+                  result.Add(grade);
+              }
+
+              return result;
+          }
+
+          private List<double> grades;
+
+          public const string CATEGORY = "Science";
+      }
+  }
+  ```
+
+- ![](2021-05-11-13-38-54.png)
+
+### [Summary](https://app.pluralsight.com/course-player?clipId=85155d6c-e8c9-4c6c-aba9-078014fb9a0b)
 
 ## Catching up with the Latest in C#
 
