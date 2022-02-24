@@ -75,7 +75,7 @@
     - [Introduction](#introduction-6)
     - [Overloading Methods](#overloading-methods)
     - [Defining Properties](#defining-properties)
-    - [Defining Property Getters and Setters](#defining-property-getters-and-setters)
+    - [Defining Property 1s and Setters](#defining-property-getters-and-setters)
     - [Defining readonly Members](#defining-readonly-members)
     - [Defining const Members](#defining-const-members)
     - [Introducing Events and Delegates](#introducing-events-and-delegates)

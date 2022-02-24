@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "BnfaqBgffYuNCJzC2jO1YWyfWCEze2cdxB4XTMh6Zlr8R/WJ1yFKPCM4IaAu9qc9MwcAcUfdl8Y8HJVJ1LF4uw==",
+  "dgSpecHash": "Fn+gu2JSjbib5Nn95MicCVhi1yK6TvHMsky7xx7n+DidObO/c4wkuPgEuqzL0jgZ/kCebHUijA8Z751OujADQQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\eric.helander\\repo\\personal\\microsoft-stack\\csharp\\pluralsight\\csharp-fundamentals\\gradebook\\test\\GradeBook.Tests\\GradeBook.Tests.csproj",
   "expectedPackageFiles": [
